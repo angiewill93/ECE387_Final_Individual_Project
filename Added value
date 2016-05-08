@@ -1,0 +1,46 @@
+#include <Wire.h> 
+#include <TEA5767Radio.h> 
+#include <LiquidCrystal_I2C.h>
+
+TEA5767Radio radio TEA5767Radio = ();
+
+double frequency = 87.5 ;
+ double frequency_anty = 87.5 ;
+
+LiquidCrystal_I2C LCD ( 0x27 , 2 , 1 , 0 , 4 , 5 , 6 , 7 , 3 , positive);
+
+void setup ()
+{
+  Serial.begin ( 9600 );
+  Wire.begin ();
+// Initial Information 
+  lcd.begin ( 16 , 2 );
+  lcd.setCursor ( 0 , 0 );
+  lcd.print ( "Arduino FM Radio" );
+  Serial.println ( "Arduino FM Radio" );
+}
+
+void loop ()
+{
+  // Reads the information from the potentiometer 
+  int poten = analogRead (A0);
+
+  // Calculate the new frequency 
+  frequency = (( double ) poten * ( 108.0 - 87.5 )) / 1024.0 + 87.5 ;
+  frequency = (( int ) (frequency * 10 )) / 10.0 ;
+
+  // If the frequency is changed, displays the new information in the display 
+  if (frequencia_ant! = Frequency)
+  {
+    lcd.setCursor ( 0 , 1 );
+    lcd.print ( "Freq" );
+    lcd.setCursor ( 6 , 1 );
+    lcd.print ( "MHz" );
+    lcd.setCursor ( 6 , 1 );
+    lcd.print (frequency, 1 );
+    Serial.print ( "Frequency" );
+    Serial.println (frequency);
+    radio.setFrequency (frequency);
+    frequency_anty = frequency;
+  }
+}
