@@ -1,0 +1,43 @@
+// Test TEA5767 FM Radio Module on Arduino
+// description: http://aguegu.net/?p=1137
+// author: Weihong Guan / aGuegu
+// created on: 2012-07-17
+ 
+#include "Wire.h"
+
+void readfromWire(int device, int count, byte * p);
+
+void setup()
+{
+	byte value_input[5] = { 0x00, 0x00, 0xc0, 0x32, 0x00 };
+	byte value_output[5];
+
+	word freq_name = 9870; //目标频率值 * 100
+	word freq = (word)((freq_name - 23.) * 1.22);
+	value_input[0] = highByte(freq);
+	value_input[1] = lowByte(freq);
+
+	Wire.begin();
+	Wire.beginTransmission(0x60);
+	Wire.write(value_input, 5);
+	Wire.endTransmission();
+
+	word mhz = round((float)freq / 1.22 + 23.);
+
+	readfromWire(0x60, 5, value_output);		
+}
+
+void loop()
+{
+		
+}
+
+void readfromWire(int device, int count, byte * p)
+{
+	Wire.requestFrom(device, count);
+
+	while (Wire.available())
+	{
+		*(p++) = Wire.read();
+	}
+}
